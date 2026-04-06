@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace Core.GamePlay.Level.Factory
 {
-    public class FactoryConfig : ScriptableObject
+    public struct BlockFactoryConfigItem
     {
-        public BaseBlock Prefab;
+        public BlockType Type;
+        public Sprite Sprite;
     }
 }

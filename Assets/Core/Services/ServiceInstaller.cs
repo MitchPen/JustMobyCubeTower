@@ -1,3 +1,4 @@
+using Core.Services.GameObjectPool;
 using Core.Services.LocalizationService;
 using Core.Services.SavingService;
 using Zenject;
@@ -10,6 +11,7 @@ namespace Core.Services
         {
             SavingServiceInstaller.Install(Container);
             LocalizationServiceInstaller.Install(Container);
+            GameObjectPoolInstaller.Install(Container);
         }
     }
 }
