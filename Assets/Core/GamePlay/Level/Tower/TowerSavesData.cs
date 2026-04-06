@@ -5,7 +5,7 @@ namespace Core.GamePlay.Level.Tower
 {
     public class TowerSavesData : SaveContainer
     {
-        public const string SAVES_KEY = "";
+        public const string SAVES_KEY = "BlockTower/TowerSavesData/Saves";
         public List<TowerSaveDataItem> Data = new List<TowerSaveDataItem>();
     }
 }

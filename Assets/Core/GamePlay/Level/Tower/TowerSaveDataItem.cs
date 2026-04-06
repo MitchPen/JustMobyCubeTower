@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Core.GamePlay.Level.Tower
 {
-    public class TowerSaveDataItem
+    public struct TowerSaveDataItem
     {
         public BlockType BlockType;
         public Vector2 Position;

@@ -5,10 +5,17 @@ namespace Core.GamePlay.Level.Tower
 {
     public class TowerModel
     {
-        private Dictionary<BaseBlock, TowerNode> _blocks = new();
+        private Dictionary<BaseBlock, TowerNode> _blocks;
         private TowerNode _lastElement;
         
         public Dictionary<BaseBlock, TowerNode> GetTowerData() => _blocks;
+        public BaseBlock GetLastBlock() => _lastElement.CurrentBaseBlock;
+
+        public TowerModel()
+        {
+            _blocks =  new Dictionary<BaseBlock, TowerNode>();
+            _lastElement = new TowerNode();
+        }
 
         public void LoadTowerSetup(BaseBlock[] setup)
         {

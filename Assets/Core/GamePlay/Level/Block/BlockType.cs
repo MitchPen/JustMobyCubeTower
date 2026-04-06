@@ -1,7 +1,10 @@
 namespace Core.GamePlay.Level.Block
 {
-    public class BlockType
+    public enum BlockType
     {
-        
+        DARK_RED,
+        RED,
+        ORANGE,
+        YELLOW,
     }
 }
