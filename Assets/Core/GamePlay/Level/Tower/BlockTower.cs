@@ -3,7 +3,7 @@ using Core.GamePlay.Level.Block;
 
 namespace Core.GamePlay.Level.Tower
 {
-    public class TowerModel
+    public class BlockTower
     {
         private Dictionary<BaseBlock, TowerNode> _blocks;
         private TowerNode _lastElement;
@@ -11,7 +11,7 @@ namespace Core.GamePlay.Level.Tower
         public Dictionary<BaseBlock, TowerNode> GetTowerData() => _blocks;
         public BaseBlock GetLastBlock() => _lastElement.CurrentBaseBlock;
 
-        public TowerModel()
+        public BlockTower()
         {
             _blocks =  new Dictionary<BaseBlock, TowerNode>();
             _lastElement = new TowerNode();

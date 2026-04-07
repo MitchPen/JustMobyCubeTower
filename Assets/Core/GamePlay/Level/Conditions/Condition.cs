@@ -5,7 +5,7 @@ namespace Core.GamePlay.Level.Conditions
 {
     public abstract class Condition
     {
-        public virtual bool CheckCondition(BaseBlock newBlock, TowerModel model)
+        public virtual bool CheckCondition(BaseBlock newBlock, BlockTower model)
         {
             return true;
         }
