@@ -7,7 +7,7 @@ namespace Core.GamePlay.Level.Block
     public class BaseBlock : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
-        [SerializeField] private Collider _collider;
+        [SerializeField] private Collider2D _collider;
         private BlockType _blockType;
         private Tween _animationTween;
         private Vector2 _localScale;
