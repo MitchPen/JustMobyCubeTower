@@ -1,4 +1,6 @@
+using Core.Services.CameraProvider;
 using UnityEngine;
+using Zenject;
 
 namespace Core.Services
 {
@@ -6,7 +8,8 @@ namespace Core.Services
     {
         private const float _ppi = 100f;
         
-        [SerializeField] private Camera _camera;
+        [Inject] private ICameraProvider _cameraProvider;
+        
         [SerializeField] private Transform _gameField;
         [SerializeField] private float _tabletAspectRatio;
         [SerializeField] private Vector2 _targetScreenRatio;
@@ -19,7 +22,7 @@ namespace Core.Services
 
             var cameraSize = Mathf.Clamp(_orthographicSizeRange.x, _orthographicSizeRange.y,
                 currentScreen.height / (aspectRatio * _ppi));
-            _camera.orthographicSize = cameraSize;
+            _cameraProvider.GetCamera().orthographicSize = cameraSize;
 
             if (aspectRatio <= _tabletAspectRatio)
             {
