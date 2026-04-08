@@ -1,4 +1,3 @@
-using UnityEngine;
 using Zenject;
 
 namespace Core.GamePlay.Input
@@ -9,7 +8,8 @@ namespace Core.GamePlay.Input
         {
             Container
                 .BindInterfacesAndSelfTo<InputService>()
-                .AsSingle();
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

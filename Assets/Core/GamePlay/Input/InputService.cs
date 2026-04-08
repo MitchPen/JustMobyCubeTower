@@ -1,6 +1,5 @@
 using System;
 using Core.Services.CameraProvider;
-using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -15,7 +14,7 @@ namespace Core.GamePlay.Input
         private Subject<Unit> _pointerUpEvent = new Subject<Unit>();
         private bool _isPointerDown;
         private Vector3 _pointerPos;
-        private IDisposable _disposable;
+        private CompositeDisposable _disposable;
 
         public IObservable<Unit> PointerDown => _pointerDownEvent;
 
@@ -34,22 +33,31 @@ namespace Core.GamePlay.Input
         {
             _camera =  _cameraProvider.GetCamera();
             _pointerPos = Vector3.zero;
-            _disposable = Observable.EveryUpdate().Subscribe(_ =>
+            _disposable =  new CompositeDisposable();
+            
+            Observable.EveryUpdate().Subscribe(_ =>
             {
                 Tick();
-            });
+            }).AddTo(_disposable);
+            
+            Observable.EveryLateUpdate().Subscribe(_ =>
+                {
+                    LateTick();
+                }
+            ).AddTo(_disposable);
         }
 
         private void Tick()
         {
-            CalcWorldPosition(UnityEngine.Input.mousePosition);
             if (UnityEngine.Input.GetMouseButtonDown(0))
-            {
                 OnPointerDown();
-                return;
-            }
             if(UnityEngine.Input.GetMouseButtonUp(0))
                 OnPointerUp();
+        }
+
+        private void LateTick()
+        {
+            UpdatePointerPosition(UnityEngine.Input.mousePosition);
         }
 
         private void OnPointerDown()
@@ -68,9 +76,8 @@ namespace Core.GamePlay.Input
             _pointerUpEvent?.OnNext(Unit.Default);
         }
 
-        private void CalcWorldPosition(Vector2 position)
+        private void UpdatePointerPosition(Vector2 position)
         {
-            if(!_isPointerDown) return;
             _pointerPos = _camera.ScreenToWorldPoint(position);
             _pointerPos.z = 0;
         }

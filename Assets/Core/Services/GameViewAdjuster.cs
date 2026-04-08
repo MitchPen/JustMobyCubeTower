@@ -24,12 +24,11 @@ namespace Core.Services
                 currentScreen.height / (aspectRatio * _ppi));
             _cameraProvider.GetCamera().orthographicSize = cameraSize;
 
-            if (aspectRatio <= _tabletAspectRatio)
-            {
-                var targetAspectRatio = _targetScreenRatio.x / _targetScreenRatio.y;
-                var filedScaleMultiplier =aspectRatio / targetAspectRatio;
-                _gameField.localScale *=  filedScaleMultiplier;
-            }
+            if (!(aspectRatio <= _tabletAspectRatio)) return;
+            
+            var targetAspectRatio = _targetScreenRatio.x / _targetScreenRatio.y;
+            var filedScaleMultiplier =aspectRatio / targetAspectRatio;
+            _gameField.localScale *=  filedScaleMultiplier;
         }
     }
 }

@@ -11,20 +11,18 @@ namespace Core.GamePlay.Level.Block
         private BlockType _blockType;
         private Tween _animationTween;
         private Vector2 _localScale;
-        
+
         public BlockType BlockType => _blockType;
-        public SpriteRenderer SpriteRenderer => _spriteRenderer;
 
-        public void ChangeRaycastInteraction(bool value)
-        {
-            _collider.enabled = value;
-        }
 
-        private void Awake()
-        {
-            _localScale =  transform.localScale;
-        }
-        
+        public void ChangeRaycastInteraction(bool value) => _collider.enabled = value;
+
+        public void ChangeMaskInteraction(bool value) =>
+            _spriteRenderer.maskInteraction =
+                value ? SpriteMaskInteraction.VisibleOutsideMask : SpriteMaskInteraction.None;
+
+        private void Awake() =>  _localScale = transform.localScale;
+
         public void Setup(BlockType blockType, Sprite sprite)
         {
             _blockType = blockType;
@@ -35,12 +33,14 @@ namespace Core.GamePlay.Level.Block
         {
             _animationTween?.Kill();
             _animationTween = transform.DOScale(_localScale, 1).SetEase(Ease.OutSine);
+            await _animationTween.AsyncWaitForCompletion();
         }
-        
+
         public async UniTask HideAnimation()
         {
             _animationTween?.Kill();
             _animationTween = transform.DOScale(Vector2.zero, 1).SetEase(Ease.OutSine);
+            await _animationTween.AsyncWaitForCompletion();
         }
     }
 }

@@ -1,7 +1,7 @@
+using System;
 using Core.GamePlay.Input;
-using Core.Services.RaycastProvider;
+using Core.GamePlay.Level.Block;
 using Core.Services.ScreenBorderProvider;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -9,44 +9,58 @@ namespace Core.GamePlay.Level.DragComponent
 {
     public class DragComponent : MonoBehaviour
     {
+        public event Action OutOfBounds;
+        
         [Inject] private IInputService _input;
         [Inject] private IScreenBorderProvider _screenBorderProvider;
-        [Inject] private IRaycastProvider _raycastProvider;
+        
+        private ScreenBorderProviderData _borderData;
+        private BaseBlock _currentBlock;
+        private bool _hasBlock;
+        
+        public bool HasBlock => _hasBlock;
+        
 
-        [SerializeField] private Transform _dragObject;
-
-        private CompositeDisposable _disposables;
-
-        private void Start()
+        private void Start() =>  _borderData = _screenBorderProvider.GetScreenToWorldBorder();
+        
+        public void SetBlock(BaseBlock block)
         {
-            _disposables = new CompositeDisposable();
-            _input.PointerDown.Subscribe(_=>
-            {                                                    
-                OnPointerDown();
-            }).AddTo(_disposables);
-            _input.PointerUp.Subscribe(_ =>
-            {
-                OnPointerUp();
-            }).AddTo(_disposables);
+            if (_hasBlock) return;
+            _hasBlock =  true;
+            _currentBlock = block;
+            Debug.Log($"SET BLOCK");
         }
 
-        private void OnPointerUp()
+        public BaseBlock GetBlock() => _currentBlock;
+    
+        public BaseBlock RemoveBlock()
         {
-            Debug.Log("OnPointerUp CAPTURE");
-            var castResult = _raycastProvider.ThrowRay(_input.GetPointerPosition(),out GameObject resultObject);
-            Debug.Log($"cast result is {castResult}");
-            if(resultObject != null)
-                Debug.Log($"name of object = {resultObject}");
+            if (!_hasBlock) return null;
+            _hasBlock = false;
+            var blockToRemove = _currentBlock;
+            _currentBlock = null;
+            Debug.Log($"REMOVE BLOCK");
+            return blockToRemove;
         }
 
-        private void OnPointerDown()
+        private void LateUpdate()
         {
-            Debug.Log("OnPointerDOWN CAPTURE");
+            if(!_hasBlock) return;
+            var position = CheckForBounds(_input.GetPointerPosition());
+            _currentBlock.transform.position = _input.GetPointerPosition();
         }
 
-        private void OnDestroy()
+        private Vector2 CheckForBounds(Vector2 input)
         {
-            _disposables?.Dispose();
+            if(input.x < _borderData.LeftBorder || input.x > _borderData.RightBorder)
+                OutOfBounds?.Invoke(); 
+            if(input.y < _borderData.BottomBorder || input.y > _borderData.TopBorder)
+                OutOfBounds?.Invoke();
+
+            var resultPosition = new Vector2(
+                Mathf.Clamp(input.x, _borderData.LeftBorder, _borderData.RightBorder),
+                Mathf.Clamp(input.y, _borderData.BottomBorder, _borderData.TopBorder));
+            return resultPosition;
         }
     }
 }
