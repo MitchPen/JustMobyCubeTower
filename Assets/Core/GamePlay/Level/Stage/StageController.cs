@@ -26,10 +26,11 @@ namespace Core.GamePlay.Level.Stage
         [Inject]
         public void Initialize(ISavingService savingService,
             ILevelSetupProvider levelSetupProvider,
-            IBlockFactory  blockFactory)
+            IBlockFactory blockFactory)
         {
             _levelSetupProvider = levelSetupProvider;
             _savingService = savingService;
+            _blockFactory =  blockFactory;
             _stageConditionChecker =  new StageConditionChecker();
             _stageReconstructor =  new StageReconstructor();
             _stageStateHandler =  new StageStateHandler();
