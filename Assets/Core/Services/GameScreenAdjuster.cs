@@ -4,18 +4,18 @@ using Zenject;
 
 namespace Core.Services
 {
-    public class GameViewAdjuster : MonoBehaviour
+    public class GameScreenAdjuster : MonoBehaviour
     {
         private const float _ppi = 100f;
         
         [Inject] private ICameraProvider _cameraProvider;
         
         [SerializeField] private float _tabletAspectRatio;
-        [SerializeField] private Vector2 _targetScreenRatio;
+       
         [SerializeField] private Vector2 _orthographicSizeRange;
         
         public bool IsTablet {get; private set;}
-        public float TabletScaleFactor {get; private set;}
+       
 
         private void Awake()
         {
@@ -27,10 +27,6 @@ namespace Core.Services
             _cameraProvider.GetCamera().orthographicSize = cameraSize;
 
             IsTablet = aspectRatio <= _tabletAspectRatio;
-            if (!IsTablet) return;
-            
-            var targetAspectRatio = _targetScreenRatio.x / _targetScreenRatio.y;
-            TabletScaleFactor =aspectRatio / targetAspectRatio;
         }
     }
 }

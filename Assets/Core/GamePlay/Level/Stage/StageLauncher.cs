@@ -2,7 +2,6 @@ using Core.GamePlay.Level.Factory;
 using Core.GamePlay.Level.SetupProvider;
 using Core.GamePlay.Level.Tower;
 using Core.GamePlay.UI;
-using Core.Services;
 using Core.Services.SavingService;
 using UnityEngine;
 using Zenject;
@@ -11,10 +10,9 @@ namespace Core.GamePlay.Level.Stage
 {
     public class StageLauncher : MonoBehaviour
     {
+        [SerializeField] private SceneViewAdjuster _sceneViewAdjuster;
         [SerializeField] private Transform _poolContainer;
-        [SerializeField] private Transform _gameField;
         [SerializeField] private StageGameplayHandler stageGameplayHandler;
-        [SerializeField] private GameViewAdjuster _gameViewAdjuster;
 
         private ISavingService _savingService;
         private ILevelSetupProvider _levelSetupProvider;
@@ -44,11 +42,9 @@ namespace Core.GamePlay.Level.Stage
 
         private void Start()
         {
-            var scaling = _gameViewAdjuster.IsTablet ? _gameViewAdjuster.TabletScaleFactor : 1f;
-            _gameField.transform.localScale *= scaling;
             _blockTower = new BlockTower();
             _stageConditionChecker.InitializeLevelConditions(_levelSetupProvider.GetLevelSetup().LevelConditions);
-            _blockFactory.Initialize(_poolContainer, scaling);
+            _blockFactory.Initialize(_poolContainer, _sceneViewAdjuster.ScaleFactor);
             LoadSaves();
             _stageReconstructor.RestoreStage(new StageReconstructorData()
             {

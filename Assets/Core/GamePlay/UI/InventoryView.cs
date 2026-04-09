@@ -17,12 +17,18 @@ namespace Core.GamePlay.UI
         
         [SerializeField] private CustomScroll _scroll;
         [SerializeField] private GraphicRaycaster _raycaster;
+        [SerializeField] private RectTransform _rectTransform;
         
         private List<InventoryViewItem>  _items;
         private CompositeDisposable _disposables = new CompositeDisposable();
         
         private Subject<BlockType> _blockPicked = new Subject<BlockType>();
         public IObservable<BlockType> BlockPickedEvent => _blockPicked;
+        
+        public Vector2 GetCanvasResolution() => new Vector2(_rectTransform.rect.width, _rectTransform.rect.height);
+
+        public Vector2 GetInventoryScreenSize() => new Vector2(_scroll.Background.rect.width, _scroll.Background.rect.height);
+  
 
         public void SetupInventory(List<BlockType> availableBlocks)
         {

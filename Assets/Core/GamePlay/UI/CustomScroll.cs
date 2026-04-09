@@ -11,6 +11,7 @@ namespace Core.GamePlay.UI
     public class CustomScroll : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         [SerializeField] private RectTransform _container;
+        [SerializeField] private RectTransform _background;
 
         [Header("Delay to check pick opportunity [ms]")] [SerializeField]
         private int _pickDelay;
@@ -33,6 +34,7 @@ namespace Core.GamePlay.UI
         public IObservable<PointerEventData> OnTryPickItem => _onTryPickItem;
 
         public RectTransform Container => _container;
+        public RectTransform Background => _background;
 
         public void ChangeScrollState(bool state) => _pointerZone.enabled = state;
         
