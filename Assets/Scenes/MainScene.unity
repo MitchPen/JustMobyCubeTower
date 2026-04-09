@@ -1248,7 +1248,7 @@ GameObject:
   - component: {fileID: 1325924728}
   - component: {fileID: 1325924729}
   m_Layer: 0
-  m_Name: StageHandler
+  m_Name: StageGameplayHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1284,6 +1284,7 @@ MonoBehaviour:
   _dragComponent: {fileID: 1605617693}
   _pit: {fileID: 1362215220}
   _field: {fileID: 1825353581}
+  _tower: {fileID: 2126767338}
 --- !u!1 &1362215217
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,6 +1748,7 @@ MonoBehaviour:
   _sceneViewAdjuster: {fileID: 1993605699}
   _poolContainer: {fileID: 1318937284}
   stageGameplayHandler: {fileID: 1325924729}
+  _blockTower: {fileID: 2126767338}
 --- !u!1 &1739655422
 GameObject:
   m_ObjectHideFlags: 0
@@ -2333,7 +2335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2126767334}
   - component: {fileID: 2126767336}
-  - component: {fileID: 2126767337}
+  - component: {fileID: 2126767338}
   m_Layer: 0
   m_Name: TowerContainter
   m_TagString: Untagged
@@ -2364,7 +2366,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2126767333}
   m_CullTransparentMesh: 1
---- !u!114 &2126767337
+--- !u!114 &2126767338
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2373,10 +2375,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2126767333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 479f13c448c033243bfe8afe86d30fb6, type: 3}
+  m_Script: {fileID: 11500000, guid: a6cc96ddbc2645098e3a92f89f9dfe3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _floor: {x: 9, y: 9}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

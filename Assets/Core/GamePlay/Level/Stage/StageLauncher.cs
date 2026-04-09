@@ -13,6 +13,7 @@ namespace Core.GamePlay.Level.Stage
         [SerializeField] private SceneViewAdjuster _sceneViewAdjuster;
         [SerializeField] private Transform _poolContainer;
         [SerializeField] private StageGameplayHandler stageGameplayHandler;
+        [SerializeField] private BlockTower _blockTower;
 
         private ISavingService _savingService;
         private ILevelSetupProvider _levelSetupProvider;
@@ -20,8 +21,7 @@ namespace Core.GamePlay.Level.Stage
         private InventoryView _inventoryView;
 
         private TowerSavesData _towerSavesData;
-        private BlockTower _blockTower;
-        private StageConditionChecker _stageConditionChecker;
+       
         private StageReconstructor _stageReconstructor;
         private StageStateHandler _stageStateHandler;
 
@@ -35,15 +35,12 @@ namespace Core.GamePlay.Level.Stage
             _savingService = savingService;
             _blockFactory = blockFactory;
             _inventoryView = inventoryView;
-            _stageConditionChecker = new StageConditionChecker();
             _stageReconstructor = new StageReconstructor();
             _stageStateHandler = new StageStateHandler();
         }
 
         private void Start()
         {
-            _blockTower = new BlockTower();
-            _stageConditionChecker.InitializeLevelConditions(_levelSetupProvider.GetLevelSetup().LevelConditions);
             _blockFactory.Initialize(_poolContainer, _sceneViewAdjuster.ScaleFactor);
             LoadSaves();
             _stageReconstructor.RestoreStage(new StageReconstructorData()
@@ -54,6 +51,7 @@ namespace Core.GamePlay.Level.Stage
             });
             _inventoryView.SetupInventory(_levelSetupProvider.GetLevelSetup().AvailableBlocks);
             stageGameplayHandler.Launch();
+            _stageStateHandler.Setup(_savingService,_towerSavesData, _blockTower.BlockTowerData);
         }
 
         private void LoadSaves()

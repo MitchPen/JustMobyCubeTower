@@ -5,10 +5,10 @@ namespace Core.GamePlay.Level.Conditions.Implementation
 {
     public class OnlySameColorCondition : Condition
     {
-        public override bool CheckCondition(BaseBlock newBlock, BlockTower model)
+        public override bool CheckCondition(BaseBlock newBlock, BlockTowerData data)
         {
-            if (model.GetLastBlock() == null) return true;
-            if (newBlock.BlockType != model.GetLastBlock().BlockType) return false;
+            if (data.GetLastBlock() == null) return true;
+            if (newBlock.BlockType != data.GetLastBlock().BlockType) return false;
             return true;
         }
     }

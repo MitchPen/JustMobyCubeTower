@@ -1,9 +1,12 @@
 using Core.GamePlay.Input;
 using Core.GamePlay.Level.Block;
 using Core.GamePlay.Level.Factory;
+using Core.GamePlay.Level.SetupProvider;
+using Core.GamePlay.Level.Tower;
 using Core.GamePlay.UI;
 using Core.Services.GameObjectPool;
 using Core.Services.RaycastProvider;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -17,49 +20,81 @@ namespace Core.GamePlay.Level.Stage
         [Inject] private IGameObjectPool _gameObjectPool;
         [Inject] private InventoryView _inventoryView;
         [Inject] private IBlockFactory _blockFactory;
-        
+        [Inject] private ILevelSetupProvider _levelSetupProvider;
+
         [SerializeField] private DragComponent.DragComponent _dragComponent;
         [SerializeField] private Pit.Pit _pit;
         [SerializeField] private Transform _field;
-        
+        [SerializeField] private BlockTower _tower;
+
+        private StageConditionChecker _stageConditionChecker;
         private CompositeDisposable _disposable;
 
         public void Launch()
         {
             _disposable = new CompositeDisposable();
-            _input.PointerDown.Subscribe(_=>
-            {                                                    
-                OnPointerDown();
-            }).AddTo(_disposable);
-            _input.PointerUp.Subscribe(_ =>
-            {
-                OnPointerUp();
-            }).AddTo(_disposable);
-            
+            _stageConditionChecker = new StageConditionChecker();
+            _stageConditionChecker.InitializeLevelConditions(_levelSetupProvider.GetLevelSetup().LevelConditions);
+            _input.PointerDown.Subscribe(_ => { OnPointerDown(); }).AddTo(_disposable);
+            _input.PointerUp.Subscribe(_ => { OnPointerUp(); }).AddTo(_disposable);
+
             _inventoryView.BlockPickedEvent.Subscribe(PickBlockFromInventory).AddTo(_disposable);
         }
 
         private void OnPointerUp()
         {
-            Debug.Log("OnPointerUp");
-            if (_dragComponent.HasBlock)
+            if (!_dragComponent.HasBlock) return;
+
+            var releasePosition = _input.GetPointerPosition();
+            var block = _dragComponent.RemoveBlock();
+            block.transform.SetParent(_field);
+            if (releasePosition.x > 1f)
             {
-                Debug.Log("Throw check");
-                var block = _dragComponent.RemoveBlock();
-                block.transform.SetParent(_field);
-                var raycastResult = _raycastProvider.ThrowRay(_input.GetPointerPosition(), out GameObject hitResult);
-                if (raycastResult)
-                {
-                    if (hitResult == _pit.gameObject && _pit.AvailableToThrow)
-                        _pit.DestroyBlock(block);
-                }
-                else
-                {
-                    block.ChangeRaycastInteraction(true);
-                }
-                
-                _pit.ChangeRaycastInteraction(false);
+                ThrowBlockOnRightSide(block, releasePosition);
             }
+            else if (releasePosition.x < -1f)
+            {
+                ThrowBlockOnLeftSide(block, releasePosition);
+            }
+            else
+            {
+                block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
+            }
+
+            _pit.ChangeRaycastInteraction(false);
+        }
+
+        private void ThrowBlockOnRightSide(BaseBlock block, Vector3 releasePosition)
+        {
+            if (_tower.BlockTowerData.BlockCount == 0)
+            {
+                _tower.AddBlock(block);
+            }
+            else
+            {
+                if (!_stageConditionChecker.CheckForCondition(block, _tower.BlockTowerData))
+                {
+                    block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget(); 
+                    return;
+                }
+                var lastBlock = _tower.BlockTowerData.GetLastBlock();
+                var lastBlockHorizontalPosition = new Vector2(lastBlock.transform.position.x, 0);
+                var pointerHorizontalPosition = new Vector2(releasePosition.x, 0);
+                var shiftThreshold = lastBlock.transform.localScale.x/2;
+                if (Vector2.Distance(lastBlockHorizontalPosition, pointerHorizontalPosition) <= shiftThreshold)
+                    _tower.AddBlock(block);
+                else
+                    block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
+            }
+        }
+
+        private void ThrowBlockOnLeftSide(BaseBlock block, Vector2 releasePosition)
+        {
+            var raycastResult = _raycastProvider.ThrowRay(releasePosition, out GameObject hitResult);
+            if (raycastResult && hitResult == _pit.gameObject && _pit.AvailableToThrow)
+                _pit.DestroyBlock(block);
+            else
+                block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
         }
 
         private void OnPointerDown()
@@ -73,6 +108,7 @@ namespace Core.GamePlay.Level.Stage
                     {
                         _dragComponent.SetBlock(block);
                         block.ChangeRaycastInteraction(false);
+                        _tower.RemoveBlock(block);
                         _pit.ChangeRaycastInteraction(true);
                     }
                 }
@@ -81,8 +117,9 @@ namespace Core.GamePlay.Level.Stage
 
         private void PickBlockFromInventory(BlockType blockType)
         {
-            var block = _blockFactory.CreateBlock(blockType,_input.GetPointerPosition());
+            var block = _blockFactory.CreateBlock(blockType, _input.GetPointerPosition());
             block.ChangeRaycastInteraction(false);
+            block.ShowAnimation().Forget();
             block.ChangeVisibility(true);
             _pit.ChangeRaycastInteraction(true);
             _dragComponent.SetBlock(block);

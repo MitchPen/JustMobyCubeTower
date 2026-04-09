@@ -1,11 +1,12 @@
+using System;
 using Core.GamePlay.Level.Block;
-using UnityEngine;
 
 namespace Core.GamePlay.Level.Tower
 {
+    [Serializable]
     public struct TowerSaveDataItem
     {
         public BlockType BlockType;
-        public Vector2 Position;
+        public float PositionX;
     }
 }

@@ -21,9 +21,9 @@ namespace Core.GamePlay.Level.Stage
             }
         }
 
-        public bool CheckForCondition(BaseBlock newBlock, BlockTower model)
+        public bool CheckForCondition(BaseBlock newBlock, BlockTowerData data)
         {
-            return _levelConditions.All(t => t.CheckCondition(newBlock, model) != false);
+            return _levelConditions.All(t => t.CheckCondition(newBlock, data) != false);
         }
     }
 }

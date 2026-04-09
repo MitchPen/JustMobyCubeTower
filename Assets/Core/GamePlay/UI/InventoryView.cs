@@ -57,7 +57,6 @@ namespace Core.GamePlay.UI
                 if (item.gameObject.TryGetComponent<InventoryViewItem>(out var viewItem))
                 {
                     _scroll.StopDrag();
-                    Debug.Log(viewItem.BlockType);
                     _blockPicked.OnNext(viewItem.BlockType);
                     break;
                 }

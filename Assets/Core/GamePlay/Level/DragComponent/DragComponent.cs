@@ -29,6 +29,7 @@ namespace Core.GamePlay.Level.DragComponent
             block.transform.SetParent(transform);
             _hasBlock =  true;
             _currentBlock = block;
+            _currentBlock.ChangeSortingOrder(true);
         }
 
         public BaseBlock GetBlock() => _currentBlock;
@@ -38,6 +39,7 @@ namespace Core.GamePlay.Level.DragComponent
             if (!_hasBlock) return null;
             _hasBlock = false;
             var blockToRemove = _currentBlock;
+            _currentBlock.ChangeSortingOrder(false);
             _currentBlock = null;
             return blockToRemove;
         }
