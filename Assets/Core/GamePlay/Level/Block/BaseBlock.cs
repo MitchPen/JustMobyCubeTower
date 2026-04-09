@@ -13,13 +13,14 @@ namespace Core.GamePlay.Level.Block
         private Vector2 _localScale;
 
         public BlockType BlockType => _blockType;
-
-
+        
         public void ChangeRaycastInteraction(bool value) => _collider.enabled = value;
 
         public void ChangeMaskInteraction(bool value) =>
             _spriteRenderer.maskInteraction =
                 value ? SpriteMaskInteraction.VisibleOutsideMask : SpriteMaskInteraction.None;
+
+        public void ChangeVisibility(bool value) =>  gameObject.SetActive(value);
 
         private void Awake() =>  _localScale = transform.localScale;
 

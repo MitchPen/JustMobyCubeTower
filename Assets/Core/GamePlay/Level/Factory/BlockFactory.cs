@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Core.GamePlay.Level.Block;
 using Core.Services.GameObjectPool;
 using UnityEngine;
@@ -13,6 +12,7 @@ namespace Core.GamePlay.Level.Factory
         private BlockFactoryConfig _config;
         private IGameObjectPool _pool;
         private Dictionary<BlockType, Sprite> _blockView;
+        private float _gameScaleFactor;
 
         [Inject]
         public BlockFactory(BlockFactoryConfig config, IGameObjectPool pool)
@@ -27,8 +27,13 @@ namespace Core.GamePlay.Level.Factory
             if (_pool.CheckForAvailable<BaseBlock>())
                 block = _pool.GetAvailable<BaseBlock>();
             else
+            {
                 block = Object.Instantiate(_config.Prefab, position, Quaternion.identity);
-            
+                block.transform.localScale *= _gameScaleFactor;
+            }
+              
+            block.ChangeVisibility(false);
+            block.ChangeRaycastInteraction(false);
             _blockView.TryGetValue(type, out Sprite sprite);
             block.Setup(type, sprite);
             block.transform.position = position;
@@ -38,16 +43,20 @@ namespace Core.GamePlay.Level.Factory
         private void InitializePool(Transform poolContainer)
         {
             _pool.SetStashContainer(poolContainer);
-
+            
             for (int i = 0; i < _poolSize; i++)
             {
                 var emptyBlock = Object.Instantiate(_config.Prefab, Vector3.zero, Quaternion.identity);
+                emptyBlock.transform.localScale *= _gameScaleFactor;
+                emptyBlock.ChangeVisibility(false);
+                emptyBlock.ChangeRaycastInteraction(false);
                 _pool.ReturnToPool(emptyBlock);
             }
         }
 
-        public void Initialize(Transform poolContainer)
+        public void Initialize(Transform poolContainer,float scaleFactor)
         {
+            _gameScaleFactor = scaleFactor;
             InitializePool(poolContainer);
             _blockView = new Dictionary<BlockType, Sprite>();
             foreach (var item in _config.Sprites)

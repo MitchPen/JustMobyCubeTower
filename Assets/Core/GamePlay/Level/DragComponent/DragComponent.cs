@@ -16,19 +16,19 @@ namespace Core.GamePlay.Level.DragComponent
         
         private ScreenBorderProviderData _borderData;
         private BaseBlock _currentBlock;
-        private bool _hasBlock;
+        private bool _hasBlock = false;
         
         public bool HasBlock => _hasBlock;
         
 
-        private void Start() =>  _borderData = _screenBorderProvider.GetScreenToWorldBorder();
+        private void Start() => _borderData = _screenBorderProvider.GetScreenToWorldBorder();
         
         public void SetBlock(BaseBlock block)
         {
             if (_hasBlock) return;
+            block.transform.SetParent(transform);
             _hasBlock =  true;
             _currentBlock = block;
-            Debug.Log($"SET BLOCK");
         }
 
         public BaseBlock GetBlock() => _currentBlock;
@@ -39,7 +39,6 @@ namespace Core.GamePlay.Level.DragComponent
             _hasBlock = false;
             var blockToRemove = _currentBlock;
             _currentBlock = null;
-            Debug.Log($"REMOVE BLOCK");
             return blockToRemove;
         }
 

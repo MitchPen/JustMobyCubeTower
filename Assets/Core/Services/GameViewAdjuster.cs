@@ -10,10 +10,12 @@ namespace Core.Services
         
         [Inject] private ICameraProvider _cameraProvider;
         
-        [SerializeField] private Transform _gameField;
         [SerializeField] private float _tabletAspectRatio;
         [SerializeField] private Vector2 _targetScreenRatio;
         [SerializeField] private Vector2 _orthographicSizeRange;
+        
+        public bool IsTablet {get; private set;}
+        public float TabletScaleFactor {get; private set;}
 
         private void Awake()
         {
@@ -24,11 +26,11 @@ namespace Core.Services
                 currentScreen.height / (aspectRatio * _ppi));
             _cameraProvider.GetCamera().orthographicSize = cameraSize;
 
-            if (!(aspectRatio <= _tabletAspectRatio)) return;
+            IsTablet = aspectRatio <= _tabletAspectRatio;
+            if (!IsTablet) return;
             
             var targetAspectRatio = _targetScreenRatio.x / _targetScreenRatio.y;
-            var filedScaleMultiplier =aspectRatio / targetAspectRatio;
-            _gameField.localScale *=  filedScaleMultiplier;
+            TabletScaleFactor =aspectRatio / targetAspectRatio;
         }
     }
 }

@@ -18,9 +18,12 @@ namespace Core.GamePlay.Level.Pit
 
         public bool AvailableToThrow { get; private set; }
 
+        private void Awake() => AvailableToThrow = true;
+
         public void DestroyBlock(BaseBlock block)
         {
             AvailableToThrow = false;
+            block.transform.SetParent(transform);
             block.ChangeRaycastInteraction(false);
             _throwSequence?.Kill();
             _throwSequence = DOTween.Sequence();
@@ -36,10 +39,10 @@ namespace Core.GamePlay.Level.Pit
                 .OnComplete(() =>
                 {
                     AvailableToThrow = true;
-                    block.gameObject.SetActive(false);
+                    block.ChangeVisibility(false);
                     block.ChangeMaskInteraction(false);
-                    block.ChangeRaycastInteraction(true);
                     _mask.SetActive(false);
+                    _gameObjectPool.ReturnToPool(block);
                 }));
         }
 

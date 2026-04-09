@@ -15,12 +15,13 @@ namespace Core.GamePlay.Input
         private bool _isPointerDown;
         private Vector3 _pointerPos;
         private CompositeDisposable _disposable;
+        private bool _firstTouch;
 
         public IObservable<Unit> PointerDown => _pointerDownEvent;
 
         public IObservable<Unit> PointerUp => _pointerUpEvent;
 
-        public Vector2 GetPointerPosition() => _pointerPos;
+        public Vector2 GetPointerPosition() => UpdatePointerPosition();
 
         [Inject]
         public InputService(ICameraProvider cameraProvider)
@@ -39,12 +40,6 @@ namespace Core.GamePlay.Input
             {
                 Tick();
             }).AddTo(_disposable);
-            
-            Observable.EveryLateUpdate().Subscribe(_ =>
-                {
-                    LateTick();
-                }
-            ).AddTo(_disposable);
         }
 
         private void Tick()
@@ -55,13 +50,9 @@ namespace Core.GamePlay.Input
                 OnPointerUp();
         }
 
-        private void LateTick()
-        {
-            UpdatePointerPosition(UnityEngine.Input.mousePosition);
-        }
-
         private void OnPointerDown()
         {
+            _firstTouch =  true;
             if (_isPointerDown) return;
            
             _isPointerDown = true;
@@ -76,10 +67,12 @@ namespace Core.GamePlay.Input
             _pointerUpEvent?.OnNext(Unit.Default);
         }
 
-        private void UpdatePointerPosition(Vector2 position)
+        private Vector2 UpdatePointerPosition()
         {
-            _pointerPos = _camera.ScreenToWorldPoint(position);
+            if(!_firstTouch) return  Vector2.zero;
+            _pointerPos = _camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             _pointerPos.z = 0;
+            return  _pointerPos;
         }
 
         public void Dispose()
