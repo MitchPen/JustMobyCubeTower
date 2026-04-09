@@ -5,6 +5,6 @@ namespace Core.Services.LocalizationService.Data
         OUT_OF_BOUNDS,
         CUBE_INSTALLED,
         CUBE_REMOVED,
-        CUBE_DELETED,
+        THROW_CUBE_TO_PIT,
     }
 }

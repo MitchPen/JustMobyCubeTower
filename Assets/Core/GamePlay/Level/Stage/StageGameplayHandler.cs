@@ -5,8 +5,10 @@ using Core.GamePlay.Level.SetupProvider;
 using Core.GamePlay.Level.Tower;
 using Core.GamePlay.UI;
 using Core.Services.GameObjectPool;
+using Core.Services.LocalizationService.Data;
 using Core.Services.RaycastProvider;
 using Core.Services.ScreenBorderProvider;
+using Core.Services.UI;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
@@ -23,6 +25,7 @@ namespace Core.GamePlay.Level.Stage
         [Inject] private IBlockFactory _blockFactory;
         [Inject] private ILevelSetupProvider _levelSetupProvider;
         [Inject] private IScreenBorderProvider _screenBorderProvider;
+        [Inject] private INotificationProvider _notificationProvider;
 
         [SerializeField] private DragComponent.DragComponent _dragComponent;
         [SerializeField] private Pit.Pit _pit;
@@ -41,6 +44,10 @@ namespace Core.GamePlay.Level.Stage
             _input.PointerUp.Subscribe(_ => { OnPointerUp(); }).AddTo(_disposable);
 
             _inventoryView.BlockPickedEvent.Subscribe(PickBlockFromInventory).AddTo(_disposable);
+            _dragComponent.OutOfBounds.Subscribe(_ =>
+            {
+                _notificationProvider.ShowNotification(LocalizationPhraseKey.OUT_OF_BOUNDS);
+            }).AddTo(_disposable);
         }
 
         private void OnPointerUp()
@@ -51,36 +58,46 @@ namespace Core.GamePlay.Level.Stage
             var block = _dragComponent.RemoveBlock();
             block.transform.SetParent(_field);
             if (releasePosition.x > 1f)
-            {
                 ThrowBlockOnRightSide(block, releasePosition);
-            }
             else if (releasePosition.x < -1f)
-            {
                 ThrowBlockOnLeftSide(block, releasePosition);
-            }
             else
-            {
-                block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
-            }
-
+                RemoveBlockToPool(block);
+            
             _pit.ChangeRaycastInteraction(false);
         }
 
         private void ThrowBlockOnRightSide(BaseBlock block, Vector3 releasePosition)
         {
             if (_tower.BlockTowerData.BlockCount == 0)
-                _tower.AddBlock(block);
+            {
+                if (releasePosition.y >= _tower.transform.position.y - block.transform.localScale.y)
+                {
+                    _tower.AddBlock(block);
+                    _notificationProvider.ShowNotification(LocalizationPhraseKey.CUBE_INSTALLED);
+                }
+                else
+                    RemoveBlockToPool(block);
+            }
             else
             {
                 var lastBlock = _tower.BlockTowerData.GetLastBlock();
                 if (CheckVerticalCondition(releasePosition, lastBlock.transform)
                     && CheckHorizontalCondition(releasePosition, lastBlock.transform)
                     && CheckCondition(block))
+                {
+                    _notificationProvider.ShowNotification(LocalizationPhraseKey.CUBE_INSTALLED);
                     _tower.AddBlock(block);
-
+                }
                 else
-                    block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
+                    RemoveBlockToPool(block);
             }
+        }
+
+        private void RemoveBlockToPool(BaseBlock block)
+        {
+            block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
+            _notificationProvider.ShowNotification(LocalizationPhraseKey.CUBE_REMOVED);
         }
 
         private bool CheckVerticalCondition(Vector2 releasePosition, Transform lastBlockTransform)
@@ -109,9 +126,12 @@ namespace Core.GamePlay.Level.Stage
         {
             var raycastResult = _raycastProvider.ThrowRay(releasePosition, out GameObject hitResult);
             if (raycastResult && hitResult == _pit.gameObject && _pit.AvailableToThrow)
+            {
                 _pit.DestroyBlock(block);
+                _notificationProvider.ShowNotification(LocalizationPhraseKey.THROW_CUBE_TO_PIT);
+            }
             else
-                block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
+                RemoveBlockToPool(block);
         }
 
         private void OnPointerDown()

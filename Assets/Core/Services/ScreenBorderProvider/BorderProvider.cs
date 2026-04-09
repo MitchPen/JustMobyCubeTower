@@ -8,33 +8,26 @@ namespace Core.Services.ScreenBorderProvider
     {
         [Inject] private ICameraProvider _cameraProvider;
         
-        [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private Vector2 _horizontalOffsets;
         [SerializeField] private Vector2 _verticalOffsets;
         
         private ScreenBorderProviderData _screenData;
         private ScreenBorderProviderData _worldData;
-        
         public ScreenBorderProviderData GetScreenBorder() => _screenData;
+   
 
         public ScreenBorderProviderData GetScreenToWorldBorder() => _worldData;
 
         private void Awake()
         {
-            _screenData = new ScreenBorderProviderData()
-            {
-                LeftBorder = 0 + _horizontalOffsets.x,
-                RightBorder = _rectTransform.rect.width - _horizontalOffsets.y,
-                TopBorder = _rectTransform.rect.height - _verticalOffsets.x,
-                BottomBorder = 0 + _verticalOffsets.y
-            };
+            var deviceResolution = Screen.currentResolution;
 
             _worldData = new ScreenBorderProviderData()
             {
-                LeftBorder = ConvertToWorldPoint(new Vector2(_screenData.LeftBorder,0)).x,
-                RightBorder = ConvertToWorldPoint(new Vector2(_screenData.RightBorder,0)).x,
-                TopBorder = ConvertToWorldPoint(new Vector2(0,_screenData.TopBorder)).y,
-                BottomBorder = ConvertToWorldPoint(new Vector2(0,_screenData.BottomBorder)).y
+                LeftBorder = ConvertToWorldPoint(new Vector2(0+_horizontalOffsets.x,0)).x,
+                RightBorder = ConvertToWorldPoint(new Vector2(deviceResolution.width-_horizontalOffsets.y,0)).x,
+                TopBorder = ConvertToWorldPoint(new Vector2(0,deviceResolution.height-_verticalOffsets.x)).y,
+                BottomBorder = ConvertToWorldPoint(new Vector2(0,0+_verticalOffsets.y)).y
             };
         }
 

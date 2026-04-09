@@ -37,7 +37,7 @@ namespace Core.GamePlay.Level
 			var quarterWidth = currentScreen.width / 4;
 			var halfHeight = currentScreen.height / 2;
 			var newPitPosition = CalcGlobalPosition(new Vector2(quarterWidth, halfHeight));
-			var totalUiHeight = currentScreen.height *(_inventoryView.GetInventoryScreenSize().y/ _inventoryView.GetCanvasResolution().y);
+			var totalUiHeight = currentScreen.height * (_inventoryView.GetInventoryScreenSize().y / _inventoryView.GetCanvasResolution().y);
 		
 			var newTowerContainerPosition = CalcGlobalPosition(new Vector2(
 				currentScreen.width - quarterWidth,

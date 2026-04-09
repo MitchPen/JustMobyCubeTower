@@ -18,4 +18,10 @@ MonoBehaviour:
     - LanguageKey: En
       PhraseContainers:
       - Key: 0
-        Line: Out of bounds
+        Line: OUT OF BOUNDS
+      - Key: 1
+        Line: INSTALLED
+      - Key: 2
+        Line: DELETED
+      - Key: 3
+        Line: THROW TO PIT

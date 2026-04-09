@@ -2,6 +2,7 @@ using System;
 using Core.GamePlay.Input;
 using Core.GamePlay.Level.Block;
 using Core.Services.ScreenBorderProvider;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -9,31 +10,29 @@ namespace Core.GamePlay.Level.DragComponent
 {
     public class DragComponent : MonoBehaviour
     {
-        public event Action OutOfBounds;
-        
         [Inject] private IInputService _input;
         [Inject] private IScreenBorderProvider _screenBorderProvider;
-        
+
         private ScreenBorderProviderData _borderData;
         private BaseBlock _currentBlock;
         private bool _hasBlock = false;
-        
+        private Subject<Unit> _outOfBounds = new Subject<Unit>();
+
         public bool HasBlock => _hasBlock;
-        
+
+        public IObservable<Unit> OutOfBounds => _outOfBounds;
 
         private void Start() => _borderData = _screenBorderProvider.GetScreenToWorldBorder();
-        
+
         public void SetBlock(BaseBlock block)
         {
             if (_hasBlock) return;
             block.transform.SetParent(transform);
-            _hasBlock =  true;
+            _hasBlock = true;
             _currentBlock = block;
             _currentBlock.ChangeSortingOrder(true);
         }
 
-        public BaseBlock GetBlock() => _currentBlock;
-    
         public BaseBlock RemoveBlock()
         {
             if (!_hasBlock) return null;
@@ -46,17 +45,17 @@ namespace Core.GamePlay.Level.DragComponent
 
         private void LateUpdate()
         {
-            if(!_hasBlock) return;
+            if (!_hasBlock) return;
             var position = CheckForBounds(_input.GetPointerPosition());
             _currentBlock.transform.position = position;
         }
 
         private Vector2 CheckForBounds(Vector2 input)
         {
-            if(input.x < _borderData.LeftBorder || input.x > _borderData.RightBorder)
-                OutOfBounds?.Invoke(); 
-            if(input.y < _borderData.BottomBorder || input.y > _borderData.TopBorder)
-                OutOfBounds?.Invoke();
+            if (input.x < _borderData.LeftBorder || input.x > _borderData.RightBorder)
+                _outOfBounds.OnNext(Unit.Default);
+            if (input.y < _borderData.BottomBorder || input.y > _borderData.TopBorder)
+                _outOfBounds.OnNext(Unit.Default);
 
             var resultPosition = new Vector2(
                 Mathf.Clamp(input.x, _borderData.LeftBorder, _borderData.RightBorder),
