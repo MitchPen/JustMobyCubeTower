@@ -32,6 +32,7 @@ namespace Core.GamePlay.Input
 
         private void Setup()
         {
+            UnityEngine.Input.multiTouchEnabled = false;
             _camera =  _cameraProvider.GetCamera();
             _pointerPos = Vector3.zero;
             _disposable =  new CompositeDisposable();
