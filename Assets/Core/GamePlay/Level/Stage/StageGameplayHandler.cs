@@ -6,6 +6,7 @@ using Core.GamePlay.Level.Tower;
 using Core.GamePlay.UI;
 using Core.Services.GameObjectPool;
 using Core.Services.RaycastProvider;
+using Core.Services.ScreenBorderProvider;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace Core.GamePlay.Level.Stage
         [Inject] private InventoryView _inventoryView;
         [Inject] private IBlockFactory _blockFactory;
         [Inject] private ILevelSetupProvider _levelSetupProvider;
+        [Inject] private IScreenBorderProvider _screenBorderProvider;
 
         [SerializeField] private DragComponent.DragComponent _dragComponent;
         [SerializeField] private Pit.Pit _pit;
@@ -67,25 +69,40 @@ namespace Core.GamePlay.Level.Stage
         private void ThrowBlockOnRightSide(BaseBlock block, Vector3 releasePosition)
         {
             if (_tower.BlockTowerData.BlockCount == 0)
-            {
                 _tower.AddBlock(block);
-            }
             else
             {
-                if (!_stageConditionChecker.CheckForCondition(block, _tower.BlockTowerData))
-                {
-                    block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget(); 
-                    return;
-                }
                 var lastBlock = _tower.BlockTowerData.GetLastBlock();
-                var lastBlockHorizontalPosition = new Vector2(lastBlock.transform.position.x, 0);
-                var pointerHorizontalPosition = new Vector2(releasePosition.x, 0);
-                var shiftThreshold = lastBlock.transform.localScale.x/2;
-                if (Vector2.Distance(lastBlockHorizontalPosition, pointerHorizontalPosition) <= shiftThreshold)
+                if (CheckVerticalCondition(releasePosition, lastBlock.transform)
+                    && CheckHorizontalCondition(releasePosition, lastBlock.transform)
+                    && CheckCondition(block))
                     _tower.AddBlock(block);
+
                 else
                     block.HideAnimation(() => _gameObjectPool.ReturnToPool(block)).Forget();
             }
+        }
+
+        private bool CheckVerticalCondition(Vector2 releasePosition, Transform lastBlockTransform)
+        {
+            var nextBlockYPos = releasePosition.y + lastBlockTransform.lossyScale.y / 2;
+            var addRestrict =  releasePosition.y < lastBlockTransform.position.y ||
+                               nextBlockYPos > _screenBorderProvider.GetScreenToWorldBorder().TopBorder;
+            return !addRestrict;
+        }
+
+        private bool CheckHorizontalCondition(Vector2 releasePosition, Transform lastBlock)
+        {
+            var lastBlockHorizontalPosition = new Vector2(lastBlock.position.x, 0);
+            var pointerHorizontalPosition = new Vector2(releasePosition.x, 0);
+            var shiftThreshold = lastBlock.localScale.x / 1.5f;
+            var horizontalDistance = Vector2.Distance(lastBlockHorizontalPosition, pointerHorizontalPosition);
+            return horizontalDistance <= shiftThreshold;
+        }
+
+        private bool CheckCondition(BaseBlock block)
+        {
+            return _stageConditionChecker.CheckForCondition(block, _tower.BlockTowerData);
         }
 
         private void ThrowBlockOnLeftSide(BaseBlock block, Vector2 releasePosition)
@@ -125,9 +142,6 @@ namespace Core.GamePlay.Level.Stage
             _dragComponent.SetBlock(block);
         }
 
-        private void OnDestroy()
-        {
-            _disposable?.Dispose();
-        }
+        private void OnDestroy() => _disposable?.Dispose();
     }
 }

@@ -9,7 +9,8 @@ namespace Core.Services.ScreenBorderProvider
         [Inject] private ICameraProvider _cameraProvider;
         
         [SerializeField] private RectTransform _rectTransform;
-        [SerializeField] private float _offset;
+        [SerializeField] private Vector2 _horizontalOffsets;
+        [SerializeField] private Vector2 _verticalOffsets;
         
         private ScreenBorderProviderData _screenData;
         private ScreenBorderProviderData _worldData;
@@ -22,18 +23,18 @@ namespace Core.Services.ScreenBorderProvider
         {
             _screenData = new ScreenBorderProviderData()
             {
-                LeftBorder = 0 + _offset,
-                RightBorder = _rectTransform.rect.width - _offset,
-                TopBorder = _rectTransform.rect.height - _offset,
-                BottomBorder = _rectTransform.rect.height + _offset
+                LeftBorder = 0 + _horizontalOffsets.x,
+                RightBorder = _rectTransform.rect.width - _horizontalOffsets.y,
+                TopBorder = _rectTransform.rect.height - _verticalOffsets.x,
+                BottomBorder = 0 + _verticalOffsets.y
             };
 
             _worldData = new ScreenBorderProviderData()
             {
                 LeftBorder = ConvertToWorldPoint(new Vector2(_screenData.LeftBorder,0)).x,
                 RightBorder = ConvertToWorldPoint(new Vector2(_screenData.RightBorder,0)).x,
-                TopBorder = ConvertToWorldPoint(new Vector2(_screenData.TopBorder,0)).y,
-                BottomBorder = ConvertToWorldPoint(new Vector2(_screenData.BottomBorder,0)).y
+                TopBorder = ConvertToWorldPoint(new Vector2(0,_screenData.TopBorder)).y,
+                BottomBorder = ConvertToWorldPoint(new Vector2(0,_screenData.BottomBorder)).y
             };
         }
 

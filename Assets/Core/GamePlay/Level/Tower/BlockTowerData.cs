@@ -48,10 +48,14 @@ namespace Core.GamePlay.Level.Tower
         {
             var node = _blocks[baseBlock];
             _blocks.Remove(baseBlock);
-            
-            if (node.Previous != null)
+            if (node == _lastElement)
+            {
+                _lastElement = node.Previous;
+                node.Next = null;
+            }
+            else if(node.Previous!=null)
                 node.Previous.Next = node.Next;
-            
+    
             _onDataUpdate.OnNext(Unit.Default);
         }
     }

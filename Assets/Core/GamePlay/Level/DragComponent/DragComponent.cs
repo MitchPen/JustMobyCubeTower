@@ -48,7 +48,7 @@ namespace Core.GamePlay.Level.DragComponent
         {
             if(!_hasBlock) return;
             var position = CheckForBounds(_input.GetPointerPosition());
-            _currentBlock.transform.position = _input.GetPointerPosition();
+            _currentBlock.transform.position = position;
         }
 
         private Vector2 CheckForBounds(Vector2 input)

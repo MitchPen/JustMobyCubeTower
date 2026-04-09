@@ -30,7 +30,6 @@ namespace Core.GamePlay.Level.Factory
             {
                 block = Object.Instantiate(_config.Prefab, position, Quaternion.identity);
                 block.transform.localScale *= _gameScaleFactor;
-                block.SetBlockScaleFactor(_gameScaleFactor);
             }
               
             block.ChangeVisibility(false);
@@ -49,7 +48,6 @@ namespace Core.GamePlay.Level.Factory
             {
                 var emptyBlock = Object.Instantiate(_config.Prefab, Vector3.zero, Quaternion.identity);
                 emptyBlock.transform.localScale *= _gameScaleFactor;
-                emptyBlock.SetBlockScaleFactor(_gameScaleFactor);
                 emptyBlock.ChangeVisibility(false);
                 emptyBlock.ChangeRaycastInteraction(false);
                 _pool.ReturnToPool(emptyBlock);

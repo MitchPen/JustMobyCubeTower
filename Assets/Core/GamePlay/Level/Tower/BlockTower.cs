@@ -16,6 +16,8 @@ namespace Core.GamePlay.Level.Tower
         public void AddBlock(BaseBlock newBaseBlock)
         {
             newBaseBlock.transform.SetParent(transform);
+            newBaseBlock.transform.DOKill(true);
+           
             if (_blockTowerData.BlockCount == 0)
             {
                 var currentPosition = newBaseBlock.transform.localPosition;
@@ -35,7 +37,7 @@ namespace Core.GamePlay.Level.Tower
                     : _shiftMultiplier * -1;
                 horizontalShift *= _shiftMultiplier;
                 var nextBlockPoint = lastBlockPosition + new Vector3(horizontalShift, blockSize, 0);
-                var pointAboveLatBlock = nextBlockPoint + new Vector3(0, blockSize/2, 0);
+                var pointAboveLatBlock = nextBlockPoint + new Vector3(0, blockSize/4, 0);
                 var motionSequence = DOTween.Sequence();
                 motionSequence.Append(newBaseBlock.transform
                     .DOMove(pointAboveLatBlock, 0.25f).SetEase(Ease.InSine));
@@ -49,7 +51,7 @@ namespace Core.GamePlay.Level.Tower
 
         public void RemoveBlock(BaseBlock blockToRemove)
         {
-            if (_blockTowerData.BlockCount > 1)
+            if (_blockTowerData.BlockCount > 0)
             {
                 var nodeData = _blockTowerData.BlocksData[blockToRemove];
                 nodeData = nodeData.Next;
