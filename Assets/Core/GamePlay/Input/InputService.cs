@@ -33,29 +33,26 @@ namespace Core.GamePlay.Input
         private void Setup()
         {
             UnityEngine.Input.multiTouchEnabled = false;
-            _camera =  _cameraProvider.GetCamera();
+            _camera = _cameraProvider.GetCamera();
             _pointerPos = Vector3.zero;
-            _disposable =  new CompositeDisposable();
-            
-            Observable.EveryUpdate().Subscribe(_ =>
-            {
-                Tick();
-            }).AddTo(_disposable);
+            _disposable = new CompositeDisposable();
+
+            Observable.EveryUpdate().Subscribe(_ => { Tick(); }).AddTo(_disposable);
         }
 
         private void Tick()
         {
             if (UnityEngine.Input.GetMouseButtonDown(0))
                 OnPointerDown();
-            if(UnityEngine.Input.GetMouseButtonUp(0))
+            if (UnityEngine.Input.GetMouseButtonUp(0))
                 OnPointerUp();
         }
 
         private void OnPointerDown()
         {
-            _firstTouch =  true;
+            _firstTouch = true;
             if (_isPointerDown) return;
-           
+
             _isPointerDown = true;
             _pointerDownEvent?.OnNext(Unit.Default);
         }
@@ -63,17 +60,17 @@ namespace Core.GamePlay.Input
         private void OnPointerUp()
         {
             if (!_isPointerDown) return;
-           
+
             _isPointerDown = false;
             _pointerUpEvent?.OnNext(Unit.Default);
         }
 
         private Vector2 UpdatePointerPosition()
         {
-            if(!_firstTouch) return  Vector2.zero;
+            if (!_firstTouch) return Vector2.zero;
             _pointerPos = _camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             _pointerPos.z = 0;
-            return  _pointerPos;
+            return _pointerPos;
         }
 
         public void Dispose()

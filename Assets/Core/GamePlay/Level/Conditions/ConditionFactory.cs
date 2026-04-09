@@ -12,7 +12,6 @@ namespace Core.GamePlay.Level.Conditions
                 case ConditionTypes.NOT_SAME_AS_PREVIOUS_COLOR: return new NotSameAsPreviousCondition();
                 case ConditionTypes.ONLY_UNIQUE_COLOR: return new OnlyUniqueColorCondition();
             }
-
             return null;
         }
     }

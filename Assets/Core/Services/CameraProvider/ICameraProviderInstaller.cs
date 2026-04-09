@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Core.Services.CameraProvider
 {
-    public class ICameraProviderInstaller: MonoInstaller
+    public class ICameraProviderInstaller : MonoInstaller
     {
         [SerializeField] private CameraProvider _cameraProvider;
 

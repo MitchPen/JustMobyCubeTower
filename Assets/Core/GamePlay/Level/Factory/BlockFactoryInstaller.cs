@@ -6,7 +6,7 @@ namespace Core.GamePlay.Level.Factory
     public class BlockFactoryInstaller : MonoInstaller
     {
         [SerializeField] private BlockFactoryConfig _factoryConfig;
-        
+
         public override void InstallBindings()
         {
             Container

@@ -12,6 +12,7 @@ namespace Core.Services.UI
         [SerializeField] private float _animationDuration;
         [SerializeField] private TMPro.TextMeshProUGUI _text;
         [SerializeField] private float _bounceFactor;
+        
         private bool _shown;
         private Sequence _animationSequence;
         private CancellationTokenSource _cts;
@@ -20,7 +21,7 @@ namespace Core.Services.UI
         {
             if (_shown)
             {
-                if(string.Equals(message, _text.text)) return;
+                if (string.Equals(message, _text.text)) return;
                 Bounce(message).Forget();
             }
             else
@@ -76,7 +77,7 @@ namespace Core.Services.UI
                 .Delay(TimeSpan.FromSeconds(_hideTimer))
                 .AttachExternalCancellation(_cts.Token)
                 .SuppressCancellationThrow();
-            if(cansellationHandler) return;
+            if (cansellationHandler) return;
             Hide();
         }
 
@@ -85,8 +86,7 @@ namespace Core.Services.UI
             if (_cts == null || _cts.IsCancellationRequested) return;
             _cts.Cancel();
             _cts.Dispose();
-            _cts =  null;
+            _cts = null;
         }
     }
 }
-

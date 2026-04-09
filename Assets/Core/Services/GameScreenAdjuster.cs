@@ -7,15 +7,13 @@ namespace Core.Services
     public class GameScreenAdjuster : MonoBehaviour
     {
         private const float _ppi = 100f;
-        
+
         [Inject] private ICameraProvider _cameraProvider;
-        
+
         [SerializeField] private float _tabletAspectRatio;
-       
         [SerializeField] private Vector2 _orthographicSizeRange;
-        
-        public bool IsTablet {get; private set;}
-       
+
+        public bool IsTablet { get; private set; }
 
         private void Awake()
         {

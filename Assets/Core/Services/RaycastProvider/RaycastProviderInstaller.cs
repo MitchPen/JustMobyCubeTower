@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Core.Services.RaycastProvider
 {
-    public class RaycastProviderInstaller :  MonoInstaller
+    public class RaycastProviderInstaller : MonoInstaller
     {
         [SerializeField] private Raycaster _raycaster;
 

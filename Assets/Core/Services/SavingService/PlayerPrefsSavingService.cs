@@ -5,11 +5,10 @@ namespace Core.Services.SavingService
 {
     public class PlayerPrefsSavingService : ISavingService
     {
-        
         public void Save<T>(T item, string saveKey) where T : SaveContainer
         {
             var stringData = JsonUtility.ToJson(item);
-            SaveStringToPrefs(saveKey,  stringData);
+            SaveStringToPrefs(saveKey, stringData);
         }
 
         public bool LoadData<T>(string saveKey, out T output) where T : SaveContainer
@@ -20,7 +19,7 @@ namespace Core.Services.SavingService
                 output = null;
                 return false;
             }
-            
+
             try
             {
                 output = JsonUtility.FromJson<T>(stringValue);

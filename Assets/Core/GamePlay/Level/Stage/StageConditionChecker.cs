@@ -9,7 +9,7 @@ namespace Core.GamePlay.Level.Stage
     public class StageConditionChecker
     {
         private List<Condition> _levelConditions;
-        
+
         public void InitializeLevelConditions(List<ConditionTypes> conditionSetup)
         {
             var conditionFactory = new ConditionFactory();

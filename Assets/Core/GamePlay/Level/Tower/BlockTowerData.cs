@@ -10,17 +10,17 @@ namespace Core.GamePlay.Level.Tower
         private Subject<Unit> _onDataUpdate = new Subject<Unit>();
         private Dictionary<BaseBlock, TowerNode> _blocks = new();
         private TowerNode _lastElement = new();
-        
+
         public Dictionary<BaseBlock, TowerNode> GetTowerData() => _blocks;
-        
+
         public BaseBlock GetLastBlock() => _lastElement.CurrentBaseBlock;
-        
+
         public IObservable<Unit> OnDataUpdate => _onDataUpdate;
-        
+
         public int BlockCount => _blocks?.Count ?? 0;
-        
-        public Dictionary<BaseBlock, TowerNode>  BlocksData => _blocks;
-        
+
+        public Dictionary<BaseBlock, TowerNode> BlocksData => _blocks;
+
         public void LoadTowerSetup(BaseBlock[] setup)
         {
             foreach (var block in setup)
@@ -37,8 +37,8 @@ namespace Core.GamePlay.Level.Tower
             };
 
             if (_lastElement != null)
-                _lastElement.Next =  newElement;
-            
+                _lastElement.Next = newElement;
+
             _blocks?.Add(newBaseBlock, newElement);
             _lastElement = newElement;
             _onDataUpdate.OnNext(Unit.Default);
@@ -53,9 +53,9 @@ namespace Core.GamePlay.Level.Tower
                 _lastElement = node.Previous;
                 node.Next = null;
             }
-            else if(node.Previous!=null)
+            else if (node.Previous != null)
                 node.Previous.Next = node.Next;
-    
+
             _onDataUpdate.OnNext(Unit.Default);
         }
     }

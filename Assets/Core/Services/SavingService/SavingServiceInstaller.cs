@@ -6,8 +6,7 @@ namespace Core.Services.SavingService
     {
         public override void InstallBindings()
         {
-            Container.
-                BindInterfacesAndSelfTo<PlayerPrefsSavingService>()
+            Container.BindInterfacesAndSelfTo<PlayerPrefsSavingService>()
                 .AsSingle()
                 .NonLazy();
         }

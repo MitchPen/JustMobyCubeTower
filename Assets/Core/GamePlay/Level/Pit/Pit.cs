@@ -9,11 +9,13 @@ namespace Core.GamePlay.Level.Pit
     public class Pit : MonoBehaviour
     {
         [Inject] IGameObjectPool _gameObjectPool;
+        
         [SerializeField] private GameObject _mask;
         [SerializeField] private Transform _blockThrowStartPoint;
         [SerializeField] private Transform _blockThrowEndPoint;
         [SerializeField] private float _throwSpeed;
         [SerializeField] private Collider2D[] _colliders;
+        
         private Sequence _throwSequence;
 
         public bool AvailableToThrow { get; private set; }

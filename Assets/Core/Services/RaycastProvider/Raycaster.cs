@@ -9,12 +9,12 @@ namespace Core.Services.RaycastProvider
         [Inject] private ICameraProvider _cameraProvider;
 
         [SerializeField] private LayerMask _layerMask;
-        
+
         private float _cameraZOffset;
         private Vector3 _rayStartPoint;
         private Vector3 _rayDirection;
 
-        private void Awake() =>  _cameraZOffset = _cameraProvider.GetCamera().transform.position.z;
+        private void Awake() => _cameraZOffset = _cameraProvider.GetCamera().transform.position.z;
 
         public bool ThrowRay(Vector2 point, out GameObject resultObject)
         {
@@ -23,13 +23,12 @@ namespace Core.Services.RaycastProvider
             _rayDirection = new Vector3(point.x, point.y, 0) - _rayStartPoint;
 
             var castResult = Physics2D.RaycastAll(
-                _rayStartPoint,_rayDirection ,
+                _rayStartPoint, _rayDirection,
                 Mathf.Infinity, _layerMask);
 
             if (castResult.Length <= 0) return false;
             resultObject = castResult[0].transform.gameObject;
             return true;
-
         }
 
         private void OnDrawGizmos()

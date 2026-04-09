@@ -1,5 +1,8 @@
-public enum SceneTypes
+namespace Core.Services
 {
-   BOOT = 0,
-   MAIN = 1
+    public enum SceneTypes
+    {
+        BOOT = 0,
+        MAIN = 1
+    }
 }

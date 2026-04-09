@@ -7,6 +7,6 @@ namespace Core.Services.LocalizationService.Data
     public struct LocalizationDataItem
     {
         public string LanguageKey;
-        public List<PhraseContainer>  PhraseContainers;
+        public List<PhraseContainer> PhraseContainers;
     }
 }

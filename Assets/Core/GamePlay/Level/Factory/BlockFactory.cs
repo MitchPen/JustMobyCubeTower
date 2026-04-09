@@ -31,7 +31,7 @@ namespace Core.GamePlay.Level.Factory
                 block = Object.Instantiate(_config.Prefab, position, Quaternion.identity);
                 block.transform.localScale *= _gameScaleFactor;
             }
-              
+
             block.ChangeVisibility(false);
             block.ChangeRaycastInteraction(false);
             _blockView.TryGetValue(type, out Sprite sprite);
@@ -43,7 +43,7 @@ namespace Core.GamePlay.Level.Factory
         private void InitializePool(Transform poolContainer)
         {
             _pool.SetStashContainer(poolContainer);
-            
+
             for (int i = 0; i < _poolSize; i++)
             {
                 var emptyBlock = Object.Instantiate(_config.Prefab, Vector3.zero, Quaternion.identity);
@@ -54,7 +54,7 @@ namespace Core.GamePlay.Level.Factory
             }
         }
 
-        public void Initialize(Transform poolContainer,float scaleFactor)
+        public void Initialize(Transform poolContainer, float scaleFactor)
         {
             _gameScaleFactor = scaleFactor;
             InitializePool(poolContainer);

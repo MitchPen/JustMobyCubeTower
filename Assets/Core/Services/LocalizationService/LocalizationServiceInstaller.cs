@@ -6,13 +6,13 @@ namespace Core.Services.LocalizationService
     {
         public override void InstallBindings()
         {
-           Container
-               .BindInterfacesAndSelfTo<LocalizationDataProvider>()
-               .AsSingle()
-               .NonLazy();
-           Container.BindInterfacesAndSelfTo<LocalizationService>()
-               .AsSingle()
-               .NonLazy();
+            Container
+                .BindInterfacesAndSelfTo<LocalizationDataProvider>()
+                .AsSingle()
+                .NonLazy();
+            Container.BindInterfacesAndSelfTo<LocalizationService>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

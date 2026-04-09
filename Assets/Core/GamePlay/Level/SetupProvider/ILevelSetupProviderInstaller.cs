@@ -6,6 +6,7 @@ namespace Core.GamePlay.Level.SetupProvider
     public class ILevelSetupProviderInstaller : MonoInstaller
     {
         [SerializeField] private LocalLevelSetup _localLevelSetup;
+
         public override void InstallBindings()
         {
             Container.BindInstance(_localLevelSetup)

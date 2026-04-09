@@ -5,8 +5,11 @@ namespace Core.GamePlay.Level.Conditions.Implementation
 {
     public class OnlyUniqueColorCondition : Condition
     {
+        //example class
+        
         public override bool CheckCondition(BaseBlock newBlock, BlockTowerData data)
         {
+           
             return base.CheckCondition(newBlock, data);
         }
     }

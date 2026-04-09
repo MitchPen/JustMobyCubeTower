@@ -6,7 +6,7 @@ namespace Core.Services.GameObjectPool
 {
     public class GameObjectPool : IGameObjectPool
     {
-        Dictionary<Type, Queue<GameObject>> _pool = new Dictionary<Type, Queue<GameObject>>();
+        private Dictionary<Type, Queue<GameObject>> _pool = new Dictionary<Type, Queue<GameObject>>();
         private Transform _poolContainer;
 
         public void SetStashContainer(Transform parent) => _poolContainer = parent;

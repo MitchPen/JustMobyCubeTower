@@ -19,9 +19,7 @@ namespace Core.GamePlay.Level.Stage
         private ILevelSetupProvider _levelSetupProvider;
         private IBlockFactory _blockFactory;
         private InventoryView _inventoryView;
-
         private TowerSavesData _towerSavesData;
-       
         private StageReconstructor _stageReconstructor;
         private StageStateHandler _stageStateHandler;
 
@@ -51,7 +49,7 @@ namespace Core.GamePlay.Level.Stage
             });
             _inventoryView.SetupInventory(_levelSetupProvider.GetLevelSetup().AvailableBlocks);
             stageGameplayHandler.Launch();
-            _stageStateHandler.Setup(_savingService,_towerSavesData, _blockTower.BlockTowerData);
+            _stageStateHandler.Setup(_savingService, _towerSavesData, _blockTower.BlockTowerData);
         }
 
         private void LoadSaves()

@@ -7,23 +7,20 @@ using UniRx;
 
 namespace Core.GamePlay.Level.Stage
 {
-    public class StageStateHandler: IDisposable
+    public class StageStateHandler : IDisposable
     {
         private TowerSavesData _savesData;
         private BlockTowerData _blockTower;
         private ISavingService _savingService;
         private CompositeDisposable _disposable;
 
-        public void Setup(ISavingService savingService,TowerSavesData savesData, BlockTowerData blockTower)
+        public void Setup(ISavingService savingService, TowerSavesData savesData, BlockTowerData blockTower)
         {
             _savingService = savingService;
-            _disposable =  new CompositeDisposable();
-            _savesData  = savesData;
+            _disposable = new CompositeDisposable();
+            _savesData = savesData;
             _blockTower = blockTower;
-            _blockTower.OnDataUpdate.Subscribe(_ =>
-            {
-                UpdateSaves();
-            }).AddTo(_disposable);
+            _blockTower.OnDataUpdate.Subscribe(_ => { UpdateSaves(); }).AddTo(_disposable);
         }
 
         private void UpdateSaves()
@@ -38,6 +35,7 @@ namespace Core.GamePlay.Level.Stage
                     PositionX = block.Key.transform.localPosition.x
                 });
             }
+
             _savingService.Save(_savesData, TowerSavesData.SAVES_KEY);
         }
 

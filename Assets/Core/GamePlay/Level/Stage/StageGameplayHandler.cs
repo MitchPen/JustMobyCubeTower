@@ -63,7 +63,7 @@ namespace Core.GamePlay.Level.Stage
                 ThrowBlockOnLeftSide(block, releasePosition);
             else
                 RemoveBlockToPool(block);
-            
+
             _pit.ChangeRaycastInteraction(false);
         }
 
@@ -103,8 +103,8 @@ namespace Core.GamePlay.Level.Stage
         private bool CheckVerticalCondition(Vector2 releasePosition, Transform lastBlockTransform)
         {
             var nextBlockYPos = releasePosition.y + lastBlockTransform.lossyScale.y / 2;
-            var addRestrict =  releasePosition.y < lastBlockTransform.position.y ||
-                               nextBlockYPos > _screenBorderProvider.GetScreenToWorldBorder().TopBorder;
+            var addRestrict = releasePosition.y < lastBlockTransform.position.y ||
+                              nextBlockYPos > _screenBorderProvider.GetScreenToWorldBorder().TopBorder;
             return !addRestrict;
         }
 

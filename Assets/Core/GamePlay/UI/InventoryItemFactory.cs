@@ -9,16 +9,16 @@ namespace Core.GamePlay.UI
     {
         private InventoryFactoryConfig _config;
         private Dictionary<BlockType, Sprite> _sprites = new Dictionary<BlockType, Sprite>();
-        
+
         [Inject]
         public InventoryItemFactory(InventoryFactoryConfig config)
         {
-            _config  = config;
+            _config = config;
         }
 
         public InventoryViewItem CreateItem(BlockType type, RectTransform parent)
         {
-            if(!_sprites.ContainsKey(type)) return null;
+            if (!_sprites.ContainsKey(type)) return null;
             var item = Object.Instantiate(_config.ViewItemPrefab, parent);
             item.Setup(type, _sprites[type]);
             return item;
@@ -26,10 +26,7 @@ namespace Core.GamePlay.UI
 
         public void PrepareFactory()
         {
-            _config.ViewItems.ForEach(i =>
-            {
-                _sprites.Add(i.Type, i.Sprite);
-            } );
+            _config.ViewItems.ForEach(i => { _sprites.Add(i.Type, i.Sprite); });
         }
     }
 }

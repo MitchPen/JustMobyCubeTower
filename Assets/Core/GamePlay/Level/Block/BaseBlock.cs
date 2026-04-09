@@ -10,13 +10,13 @@ namespace Core.GamePlay.Level.Block
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Collider2D _collider;
         [SerializeField] private float _animationtiming;
-        
+
         private BlockType _blockType;
         private Tween _animationTween;
         private int _sortingOrder;
-        
+
         public BlockType BlockType => _blockType;
-        
+
         public void ChangeRaycastInteraction(bool value) => _collider.enabled = value;
 
         public void ChangeMaskInteraction(bool value) =>
@@ -31,12 +31,9 @@ namespace Core.GamePlay.Level.Block
                 _spriteRenderer.sortingOrder = _sortingOrder;
         }
 
-        public void ChangeVisibility(bool value) =>  gameObject.SetActive(value);
+        public void ChangeVisibility(bool value) => gameObject.SetActive(value);
 
-        private void Awake()
-        {
-            _sortingOrder = _spriteRenderer.sortingOrder;
-        }
+        private void Awake() => _sortingOrder = _spriteRenderer.sortingOrder;
 
         public void Setup(BlockType blockType, Sprite sprite)
         {
@@ -51,7 +48,7 @@ namespace Core.GamePlay.Level.Block
             _animationTween = _spriteRenderer.transform
                 .DOScale(Vector2.one, _animationtiming)
                 .SetEase(Ease.OutSine)
-                .OnComplete(()=>onComplete?.Invoke());
+                .OnComplete(() => onComplete?.Invoke());
             await _animationTween.AsyncWaitForCompletion();
         }
 
@@ -60,10 +57,10 @@ namespace Core.GamePlay.Level.Block
             _animationTween?.Kill();
             _animationTween = _spriteRenderer.transform
                 .DOScale(Vector2.zero, _animationtiming).SetEase(Ease.OutSine)
-                .OnComplete(()=>onComplete?.Invoke());
+                .OnComplete(() => onComplete?.Invoke());
             await _animationTween.AsyncWaitForCompletion();
         }
 
-        private void OnDestroy() =>_animationTween?.Kill();
+        private void OnDestroy() => _animationTween?.Kill();
     }
 }

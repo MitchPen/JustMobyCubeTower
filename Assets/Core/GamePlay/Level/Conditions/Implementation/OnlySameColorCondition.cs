@@ -5,6 +5,8 @@ namespace Core.GamePlay.Level.Conditions.Implementation
 {
     public class OnlySameColorCondition : Condition
     {
+        //example class
+        
         public override bool CheckCondition(BaseBlock newBlock, BlockTowerData data)
         {
             if (data.GetLastBlock() == null) return true;

@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Core.Services.ScreenBorderProvider
 {
-    public class IBorderProviderInstaller: MonoInstaller
+    public class IBorderProviderInstaller : MonoInstaller
     {
         [SerializeField] private BorderProvider _borderProvider;
 

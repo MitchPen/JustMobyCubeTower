@@ -37,7 +37,7 @@ namespace Core.GamePlay.UI
         public RectTransform Background => _background;
 
         public void ChangeScrollState(bool state) => _pointerZone.enabled = state;
-        
+
         public void StopDrag() => DisableInteraction();
 
         public void SetWidth(float width)
@@ -53,7 +53,7 @@ namespace Core.GamePlay.UI
             _pointerDown = true;
             TryPickItem().Forget();
         }
-        
+
         public void OnDrag(PointerEventData eventData)
         {
             if (!_pointerDown) return;
@@ -68,12 +68,9 @@ namespace Core.GamePlay.UI
             newXPos = Mathf.Clamp(newXPos, -3335, _scrollBorders.x);
             _container.transform.localPosition = new Vector3(newXPos, _container.transform.localPosition.y, 0);
         }
-        
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            DisableInteraction();
-        }
-        
+
+        public void OnPointerUp(PointerEventData eventData) => DisableInteraction();
+
         private void DisableInteraction()
         {
             DestroyToken();
@@ -101,7 +98,7 @@ namespace Core.GamePlay.UI
             }
 
             var distance = Vector2.Distance(_pointerDownPosition, _dragData.position);
-            
+
             if (distance <= _shiftThreshold)
                 _onTryPickItem.OnNext(_dragData);
         }
