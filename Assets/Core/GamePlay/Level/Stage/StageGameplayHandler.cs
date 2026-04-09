@@ -102,9 +102,10 @@ namespace Core.GamePlay.Level.Stage
 
         private bool CheckVerticalCondition(Vector2 releasePosition, Transform lastBlockTransform)
         {
-            var nextBlockYPos = releasePosition.y + lastBlockTransform.lossyScale.y / 2;
+            var blockHalfSize = lastBlockTransform.lossyScale.y / 2;
+            var nextBlockYPos = releasePosition.y + blockHalfSize;
             var addRestrict = releasePosition.y < lastBlockTransform.position.y ||
-                              nextBlockYPos > _screenBorderProvider.GetScreenToWorldBorder().TopBorder;
+                              nextBlockYPos > _screenBorderProvider.GetScreenToWorldBorder().TopBorder +blockHalfSize;
             return !addRestrict;
         }
 
